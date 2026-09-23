@@ -2,6 +2,9 @@ name: image_playground
 description: >-
   Flutter bindings for Apple's Image Playground framework: on-device image generation.
 version: 0.1.0
+homepage: https://github.com/jamiewest/core_ai
+repository: https://github.com/jamiewest/core_ai/tree/main/packages/image_playground
+issue_tracker: https://github.com/jamiewest/core_ai/issues
 
 environment:
   sdk: ^3.11.0

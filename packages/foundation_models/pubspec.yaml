@@ -2,6 +2,9 @@ name: foundation_models
 description: >-
   Flutter bindings for Apple's Foundation Models framework: the on-device and Private Cloud Compute Apple Intelligence language models.
 version: 0.1.0
+homepage: https://github.com/jamiewest/core_ai
+repository: https://github.com/jamiewest/core_ai/tree/main/packages/foundation_models
+issue_tracker: https://github.com/jamiewest/core_ai/issues
 
 environment:
   sdk: ^3.11.0

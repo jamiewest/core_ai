@@ -212,7 +212,7 @@ phrase; final results provide word runs when timing is requested.
 
 ## Verification
 
-See [HANDOFF_NOTES.md](HANDOFF_NOTES.md) for current verification and remaining
+See [the verification notes](https://github.com/jamiewest/core_ai/blob/main/packages/apple_speech/HANDOFF_NOTES.md) for current verification and remaining
 manual checks, and [example/README.md](example/README.md) for demo/test commands.
 Tests use handwritten API fakes and bundled synthetic audio. Real-framework
 tests never request permissions or download models. All 14 framework tests

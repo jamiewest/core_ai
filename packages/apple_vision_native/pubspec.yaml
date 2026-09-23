@@ -1,0 +1,34 @@
+name: apple_vision_native
+description: >-
+  Flutter bindings for Apple's Vision framework: text recognition, detection, classification, segmentation and more.
+version: 0.1.0
+homepage: https://github.com/jamiewest/core_ai
+repository: https://github.com/jamiewest/core_ai/tree/main/packages/apple_vision_native
+issue_tracker: https://github.com/jamiewest/core_ai/issues
+
+environment:
+  sdk: ^3.11.0
+  flutter: '>=3.38.0'
+
+resolution: workspace
+
+dependencies:
+  flutter:
+    sdk: flutter
+  meta: ^1.19.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  pigeon: ^29.0.2
+
+flutter:
+  plugin:
+    platforms:
+      ios:
+        pluginClass: AppleVisionPlugin
+        sharedDarwinSource: true
+      macos:
+        pluginClass: AppleVisionPlugin
+        sharedDarwinSource: true

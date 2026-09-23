@@ -2,6 +2,9 @@ name: apple_sound_analysis
 description: >-
   Flutter bindings for Apple's SoundAnalysis framework: on-device sound classification.
 version: 0.1.0
+homepage: https://github.com/jamiewest/core_ai
+repository: https://github.com/jamiewest/core_ai/tree/main/packages/apple_sound_analysis
+issue_tracker: https://github.com/jamiewest/core_ai/issues
 
 environment:
   sdk: ^3.11.0

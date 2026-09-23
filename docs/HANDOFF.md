@@ -2,6 +2,33 @@
 
 ## Current status (2026-09-23)
 
+### Publication preparation
+
+The Vision package is now `apple_vision_native` because `apple_vision` is
+already published by another owner. The root and all ten packages now carry
+the MIT license, copyright Jamie West. Package and podspec metadata point to
+`https://github.com/jamiewest/core_ai`; the podspec author is Jamie West.
+Earlier license/homepage/author TODOs below are historical. See
+[RELEASING.md](RELEASING.md) for independent package releases and the
+non-publishing validation script. Nothing has been uploaded to pub.dev.
+
+Publication preparation verification:
+
+- Workspace analysis and formatting pass.
+- All 214 package unit tests and eight example widget tests pass.
+- The renamed Vision plugin passes all 16 macOS framework integration tests;
+  its iOS example builds with signing disabled.
+- All ten CocoaPods specs and Swift package manifests parse successfully.
+- All ten publication dry-runs pass with zero warnings in a separate source
+  copy outside Git. Archives are approximately 222–420 KB. In this working
+  tree, pub reports uncommitted-file warnings until the release is committed.
+- MIT licenses and initial `0.1.0` changelog entries exist in every package.
+
+The existing Media Intelligence device limitations remain; they are now
+recorded in its published README and changelog as well as in these notes.
+
+### Implementation status
+
 All ten packages are implemented. `image_playground` and
 `media_intelligence` were finished on 2026-09-23, after Codex's
 continuation in `docs/CODEX_HANDOFF.md`.
@@ -20,7 +47,7 @@ Physical iPhone runs on iOS 27.0 (24A437), via `flutter drive`:
 | Package | Passing | Failing | Skipped |
 |---|---:|---:|---:|
 | apple_natural_language | 15 | 0 | 0 |
-| apple_vision | 16 | 0 | 0 |
+| apple_vision_native | 16 | 0 | 0 |
 | core_ml | 30 | 0 | 0 |
 | apple_sound_analysis | 14 | 0 | 0 |
 | apple_speech | 14 | 0 | 0 |
@@ -142,7 +169,7 @@ its own package under `packages/`.
 | core_ai | Done. Tested on macOS 27 (unit and integration) and on an iPhone with iOS 27 (21/21). |
 | foundation_models | Done. Tested on macOS 27 and on the iPhone (18/18). |
 | apple_natural_language | Done on macOS: 14 unit, 15 integration and 1 app test pass; the iOS build succeeds. **On the iPhone, 14/15 pass**, see below. |
-| apple_vision | A background agent was building it. Read `packages/apple_vision/HANDOFF_NOTES.md` if it exists, then verify. |
+| apple_vision_native | A background agent was building it. Read `packages/apple_vision_native/HANDOFF_NOTES.md` if it exists, then verify. |
 | core_ml | Same: a background agent; see `packages/core_ml/HANDOFF_NOTES.md`. |
 | apple_speech | Same: a background agent; see `packages/apple_speech/HANDOFF_NOTES.md`. |
 | apple_translation | Same: a background agent; see `packages/apple_translation/HANDOFF_NOTES.md`. |

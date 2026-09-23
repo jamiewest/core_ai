@@ -9,3 +9,6 @@
   with its own success or error.
 * Up-front validation of asset ids and files, typed errors, handle
   lifecycle with finalizers, and a testing library for fakes.
+* Known limitation: the synthetic highlight fixture passes on macOS but
+  returns no highlights on iOS 27; real-video highlights and real-face grouping
+  still need device validation.

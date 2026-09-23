@@ -49,7 +49,12 @@ first; this package has no Photos integration.
 people in this repository. The integration suite has a test for your own
 photos, which is skipped unless you pass
 `--dart-define=MEDIA_INTELLIGENCE_FACE_DIR=<folder of photos of people>`.
-Runs on an iPhone are also untested.
+
+**iPhone verification (iOS 27):** nine integration tests pass, one fails, and
+the optional real-face test is skipped. The synthetic two-scene clip returns
+no highlights from Apple's framework on the phone, although the same fixture
+passes on macOS. Highlight selection still needs validation with representative
+real video before it can be considered device-verified.
 
 ## Video
 

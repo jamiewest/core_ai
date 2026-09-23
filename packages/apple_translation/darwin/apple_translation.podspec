@@ -8,9 +8,9 @@ Pod::Spec.new do |s|
   s.description      = <<-DESC
 Flutter bindings for Apple's Translation framework: on-device translation.
                        DESC
-  s.homepage         = 'http://example.com'
-  s.license          = { :file => '../LICENSE' }
-  s.author           = { 'apple_ai authors' => 'noreply@example.com' }
+  s.homepage         = 'https://github.com/jamiewest/core_ai'
+  s.license          = { :type => 'MIT', :file => '../LICENSE' }
+  s.author           = 'Jamie West'
   s.source           = { :path => '.' }
   s.source_files     = 'apple_translation/Sources/apple_translation/**/*.swift'
   s.ios.dependency 'Flutter'

@@ -8,9 +8,9 @@ Pod::Spec.new do |s|
   s.description      = <<-DESC
 Flutter bindings for Apple's SoundAnalysis framework: on-device sound classification.
                        DESC
-  s.homepage         = 'http://example.com'
-  s.license          = { :file => '../LICENSE' }
-  s.author           = { 'apple_ai authors' => 'noreply@example.com' }
+  s.homepage         = 'https://github.com/jamiewest/core_ai'
+  s.license          = { :type => 'MIT', :file => '../LICENSE' }
+  s.author           = 'Jamie West'
   s.source           = { :path => '.' }
   s.source_files     = 'apple_sound_analysis/Sources/apple_sound_analysis/**/*.swift'
   s.ios.dependency 'Flutter'

@@ -212,7 +212,7 @@ flutter drive --no-pub --driver=test_driver/integration_test.dart \
 If the suite skips named entities, report that separately from passing tests.
 Do not claim iOS tagging was verified merely because the runner exits 0.
 
-### apple_vision
+### apple_vision_native
 
 The README already existed beyond the original handoff's stated progress.
 Reviewed it, replaced `print` in the quick start with `dart:developer` logging,
@@ -257,10 +257,10 @@ removes the inaccurate claim that all unfinished packages are empty scaffolds.
 * `packages/apple_natural_language/example/integration_test/apple_natural_language_test.dart`
 * `packages/apple_natural_language/README.md`
 * `packages/apple_natural_language/CHANGELOG.md`
-* `packages/apple_vision/README.md`
-* `packages/apple_vision/CHANGELOG.md`
-* `packages/apple_vision/HANDOFF_NOTES.md`
-* `packages/apple_vision/pigeons/apple_vision_api.dart`: formatting only.
+* `packages/apple_vision_native/README.md`
+* `packages/apple_vision_native/CHANGELOG.md`
+* `packages/apple_vision_native/HANDOFF_NOTES.md`
+* `packages/apple_vision_native/pigeons/apple_vision_native_api.dart`: formatting only.
 * `packages/core_ml/example/integration_test/app_test.dart`
 
 Builds also refreshed ordinary generated Flutter/Xcode artifacts. No source

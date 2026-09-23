@@ -9,9 +9,9 @@ Pod::Spec.new do |s|
 Flutter bindings for Apple's Core AI framework (iOS 27+ / macOS 27+), built on
 Pigeon platform channels.
                        DESC
-  s.homepage         = 'http://example.com'
-  s.license          = { :file => '../LICENSE' }
-  s.author           = { 'core_ai authors' => 'noreply@example.com' }
+  s.homepage         = 'https://github.com/jamiewest/core_ai'
+  s.license          = { :type => 'MIT', :file => '../LICENSE' }
+  s.author           = 'Jamie West'
   s.source           = { :path => '.' }
   s.source_files     = 'core_ai/Sources/core_ai/**/*.swift'
   s.ios.dependency 'Flutter'

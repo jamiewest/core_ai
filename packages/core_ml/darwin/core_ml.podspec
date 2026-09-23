@@ -8,9 +8,9 @@ Pod::Spec.new do |s|
   s.description      = <<-DESC
 Flutter bindings for Apple's Core ML framework: run .mlmodel and .mlpackage models.
                        DESC
-  s.homepage         = 'http://example.com'
-  s.license          = { :file => '../LICENSE' }
-  s.author           = { 'apple_ai authors' => 'noreply@example.com' }
+  s.homepage         = 'https://github.com/jamiewest/core_ai'
+  s.license          = { :type => 'MIT', :file => '../LICENSE' }
+  s.author           = 'Jamie West'
   s.source           = { :path => '.' }
   s.source_files     = 'core_ml/Sources/core_ml/**/*.swift'
   s.ios.dependency 'Flutter'

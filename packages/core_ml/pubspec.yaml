@@ -1,9 +1,11 @@
 name: core_ml
 description: >-
-  Flutter bindings for Apple's Core ML framework (iOS 18+ / macOS 15+):
-  compile and load .mlmodel and .mlpackage models, inspect their
-  descriptions, and run single, batch and stateful predictions.
+  Flutter bindings for Apple's Core ML framework: compile and load models,
+  inspect their inputs and outputs, and run single, batch and stateful predictions.
 version: 0.1.0
+homepage: https://github.com/jamiewest/core_ai
+repository: https://github.com/jamiewest/core_ai/tree/main/packages/core_ml
+issue_tracker: https://github.com/jamiewest/core_ai/issues
 
 environment:
   sdk: ^3.11.0

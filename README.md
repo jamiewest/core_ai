@@ -14,7 +14,7 @@ platform channels.
 |---|---|---|---|
 | [`core_ai`](packages/core_ai) | Core AI | Run your own `.aimodel` models: tensors, images, stateful models, compute-stream pipelines, the specialization cache | **Done**, tested on macOS 27 and iOS 27 hardware |
 | [`foundation_models`](packages/foundation_models) | Foundation Models | Apple Intelligence language models: chat, streaming, guided generation, tools, Private Cloud Compute | **Done**, tested on macOS 27 and iOS 27 hardware |
-| [`apple_vision`](packages/apple_vision) | Vision | Image analysis: text, barcodes, faces, poses, classification, saliency, segmentation | **Done**, tested on macOS 27 and iOS 27 hardware |
+| [`apple_vision_native`](packages/apple_vision_native) | Vision | Image analysis: text, barcodes, faces, poses, classification, saliency, segmentation | **Done**, tested on macOS 27 and iOS 27 hardware |
 | [`core_ml`](packages/core_ml) | Core ML | Run `.mlmodel` / `.mlpackage` models | **Done**, tested on macOS 27 and iOS 27 hardware |
 | [`apple_speech`](packages/apple_speech) | Speech | On-device speech to text, for files and live audio | **Done**, file/simulated-live pipeline tested on macOS 27 and iOS 27 hardware; iPhone microphone check confirmed by user |
 | [`apple_sound_analysis`](packages/apple_sound_analysis) | SoundAnalysis | Sound classification | **Done**, file/PCM tested on macOS 27 and iOS 27 hardware; iPhone microphone check confirmed by user |
@@ -35,7 +35,7 @@ manual check. See [the handoff](docs/HANDOFF.md) for what remains.
 * **Use Apple's built-in LLM**: `foundation_models`. No model to ship, but it
   needs Apple Intelligence.
 * **Understand an image, sound or text**: the task-specific frameworks
-  (`apple_vision`, `apple_speech`, `apple_natural_language`, ...), which are
+  (`apple_vision_native`, `apple_speech`, `apple_natural_language`, ...), which are
   smaller, faster and available more widely than the LLM.
 
 ## Requirements
@@ -76,4 +76,9 @@ implementations.
 
 ## Licensing
 
-Each package has a `LICENSE` placeholder. Choose a license before publishing.
+All packages are licensed under the [MIT License](LICENSE).
+
+## Releases
+
+The ten plugins are published separately and versioned independently. See
+[the release guide](docs/RELEASING.md) for validation and publishing steps.
