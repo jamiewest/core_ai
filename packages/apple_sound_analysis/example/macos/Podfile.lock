@@ -1,0 +1,23 @@
+PODS:
+  - apple_sound_analysis (0.1.0):
+    - Flutter
+    - FlutterMacOS
+  - FlutterMacOS (1.0.0)
+
+DEPENDENCIES:
+  - apple_sound_analysis (from `Flutter/ephemeral/.symlinks/plugins/apple_sound_analysis/darwin`)
+  - FlutterMacOS (from `Flutter/ephemeral`)
+
+EXTERNAL SOURCES:
+  apple_sound_analysis:
+    :path: Flutter/ephemeral/.symlinks/plugins/apple_sound_analysis/darwin
+  FlutterMacOS:
+    :path: Flutter/ephemeral
+
+SPEC CHECKSUMS:
+  apple_sound_analysis: 1aa0a01015e7eba1127e549d0f46ed2db33316d9
+  FlutterMacOS: c232990155153907050900a2e175c7773903ba4e
+
+PODFILE CHECKSUM: 1e95c36afbfd1cb6423ceca4de7a8e1b256fb6ac
+
+COCOAPODS: 1.16.2

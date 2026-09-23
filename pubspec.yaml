@@ -1,0 +1,31 @@
+name: apple_ai_workspace
+description: Monorepo of Flutter plugins for Apple's AI frameworks.
+publish_to: none
+
+environment:
+  sdk: ^3.11.0
+
+workspace:
+  - packages/core_ai
+  - packages/core_ai/example
+  - packages/foundation_models
+  - packages/foundation_models/example
+  - packages/apple_vision
+  - packages/apple_vision/example
+  - packages/apple_speech
+  - packages/apple_speech/example
+  - packages/apple_sound_analysis
+  - packages/apple_sound_analysis/example
+  - packages/apple_natural_language
+  - packages/apple_natural_language/example
+  - packages/apple_translation
+  - packages/apple_translation/example
+  - packages/core_ml
+  - packages/core_ml/example
+  - packages/image_playground
+  - packages/image_playground/example
+  - packages/media_intelligence
+  - packages/media_intelligence/example
+
+dev_dependencies:
+  flutter_lints: ^6.0.0

@@ -1,0 +1,40 @@
+name: core_ai
+description: >-
+  Flutter bindings for Apple's Core AI framework (iOS 27+ / macOS 27+):
+  load and specialize .aimodel files, inspect functions, run inference on
+  NDArrays and pixel buffers, stateful models, async compute pipelines,
+  the specialized-model cache and model asset metadata.
+version: 0.1.0
+
+environment:
+  sdk: ^3.11.0
+  flutter: '>=3.38.0'
+
+resolution: workspace
+
+dependencies:
+  flutter:
+    sdk: flutter
+  meta: ^1.19.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  pigeon: ^29.0.2
+
+flutter:
+  plugin:
+    platforms:
+      ios:
+        pluginClass: CoreAIPlugin
+        sharedDarwinSource: true
+      macos:
+        pluginClass: CoreAIPlugin
+        sharedDarwinSource: true
+
+topics:
+  - machine-learning
+  - ai
+  - apple
+  - inference

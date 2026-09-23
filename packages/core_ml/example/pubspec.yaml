@@ -1,0 +1,39 @@
+name: core_ml_example
+description: "Demonstrates the core_ml plugin."
+publish_to: 'none'
+
+environment:
+  sdk: ^3.11.0
+
+resolution: workspace
+
+dependencies:
+  flutter:
+    sdk: flutter
+  core_ml:
+    path: ../
+
+dev_dependencies:
+  integration_test:
+    sdk: flutter
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+  # .mlpackage is a directory tree and Flutter's asset directory entries are
+  # not recursive, so list every directory that holds files.
+  assets:
+    - assets/models/affine.mlpackage/
+    - assets/models/affine.mlpackage/Data/com.apple.CoreML/
+    - assets/models/multi_io.mlpackage/
+    - assets/models/multi_io.mlpackage/Data/com.apple.CoreML/
+    - assets/models/image_input.mlpackage/
+    - assets/models/image_input.mlpackage/Data/com.apple.CoreML/
+    - assets/models/stateful.mlpackage/
+    - assets/models/stateful.mlpackage/Data/com.apple.CoreML/
+    - assets/models/classifier.mlpackage/
+    - assets/models/classifier.mlpackage/Data/com.apple.CoreML/
+    - assets/models/multifunction.mlpackage/
+    - assets/models/multifunction.mlpackage/Data/com.apple.CoreML/

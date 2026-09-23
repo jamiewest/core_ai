@@ -1,0 +1,23 @@
+PODS:
+  - apple_speech (0.1.0):
+    - Flutter
+    - FlutterMacOS
+  - FlutterMacOS (1.0.0)
+
+DEPENDENCIES:
+  - apple_speech (from `Flutter/ephemeral/.symlinks/plugins/apple_speech/darwin`)
+  - FlutterMacOS (from `Flutter/ephemeral`)
+
+EXTERNAL SOURCES:
+  apple_speech:
+    :path: Flutter/ephemeral/.symlinks/plugins/apple_speech/darwin
+  FlutterMacOS:
+    :path: Flutter/ephemeral
+
+SPEC CHECKSUMS:
+  apple_speech: 19ca6159e902b77b16a0fb0b2a398d46eea8ebd4
+  FlutterMacOS: c232990155153907050900a2e175c7773903ba4e
+
+PODFILE CHECKSUM: 1e95c36afbfd1cb6423ceca4de7a8e1b256fb6ac
+
+COCOAPODS: 1.16.2

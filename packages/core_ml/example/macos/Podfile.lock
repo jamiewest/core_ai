@@ -1,0 +1,23 @@
+PODS:
+  - core_ml (0.1.0):
+    - Flutter
+    - FlutterMacOS
+  - FlutterMacOS (1.0.0)
+
+DEPENDENCIES:
+  - core_ml (from `Flutter/ephemeral/.symlinks/plugins/core_ml/darwin`)
+  - FlutterMacOS (from `Flutter/ephemeral`)
+
+EXTERNAL SOURCES:
+  core_ml:
+    :path: Flutter/ephemeral/.symlinks/plugins/core_ml/darwin
+  FlutterMacOS:
+    :path: Flutter/ephemeral
+
+SPEC CHECKSUMS:
+  core_ml: c4318d6bb7e8c08f994b3520ae92396b80d2d5e1
+  FlutterMacOS: c232990155153907050900a2e175c7773903ba4e
+
+PODFILE CHECKSUM: 1e95c36afbfd1cb6423ceca4de7a8e1b256fb6ac
+
+COCOAPODS: 1.16.2

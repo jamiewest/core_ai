@@ -1,0 +1,23 @@
+PODS:
+  - apple_natural_language (0.1.0):
+    - Flutter
+    - FlutterMacOS
+  - FlutterMacOS (1.0.0)
+
+DEPENDENCIES:
+  - apple_natural_language (from `Flutter/ephemeral/.symlinks/plugins/apple_natural_language/darwin`)
+  - FlutterMacOS (from `Flutter/ephemeral`)
+
+EXTERNAL SOURCES:
+  apple_natural_language:
+    :path: Flutter/ephemeral/.symlinks/plugins/apple_natural_language/darwin
+  FlutterMacOS:
+    :path: Flutter/ephemeral
+
+SPEC CHECKSUMS:
+  apple_natural_language: 893c91422cc637a6b0fff8018d56e023070ec50c
+  FlutterMacOS: c232990155153907050900a2e175c7773903ba4e
+
+PODFILE CHECKSUM: 1e95c36afbfd1cb6423ceca4de7a8e1b256fb6ac
+
+COCOAPODS: 1.16.2

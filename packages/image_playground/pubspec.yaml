@@ -1,0 +1,31 @@
+name: image_playground
+description: >-
+  Flutter bindings for Apple's Image Playground framework: on-device image generation.
+version: 0.1.0
+
+environment:
+  sdk: ^3.11.0
+  flutter: '>=3.38.0'
+
+resolution: workspace
+
+dependencies:
+  flutter:
+    sdk: flutter
+  meta: ^1.19.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  pigeon: ^29.0.2
+
+flutter:
+  plugin:
+    platforms:
+      ios:
+        pluginClass: ImagePlaygroundPlugin
+        sharedDarwinSource: true
+      macos:
+        pluginClass: ImagePlaygroundPlugin
+        sharedDarwinSource: true

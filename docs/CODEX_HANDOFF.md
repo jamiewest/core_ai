@@ -1,0 +1,178 @@
+# Codex continuation (2026-09-22)
+
+Status: Codex is completing `apple_sound_analysis`; other packages are not
+claimed. SoundAnalysis backup:
+`/var/folders/54/d3l1d78d4ds62ghx9393wypc0000gn/T/core_ai_sound_codex_mvmiaptp`.
+Translation is finished. The user requested
+one package at a time, starting with those closest to completion.
+Translation source backup:
+`/var/folders/54/d3l1d78d4ds62ghx9393wypc0000gn/T/core_ai_translation_codex_jld10hko`.
+Read `HANDOFF.md` and `CONVENTIONS.md` for the original context. The entries
+below supersede the older status notes where they differ.
+
+The workspace has no `.git` directory. Originals of edited existing files
+and source hashes were saved at:
+`/var/folders/54/d3l1d78d4ds62ghx9393wypc0000gn/T/core_ai_codex_handoff_yk0r0z4i`.
+
+No commits, global configuration changes, or dependency additions. Existing
+Claude processes were left alone. The selected source trees were idle before
+editing, and a final comparison found no unexpected source edits there.
+
+## Translation completion (second continuation)
+
+`apple_translation` now meets the package definition of done for its existing
+installed-language API. No native/plugin API implementation changes were
+needed. The example is a Material app with light/dark themes, supported
+language selection, quality/speed strategies, pack availability/refresh,
+single-text translation and streaming per-line batches. Controls explain
+unsupported OS versions and missing packs; every translation operation
+disposes its session in `finally`.
+
+Verification on macOS 27 / Xcode 27:
+
+* 36 API unit tests pass.
+* Four new widget tests pass, including missing-pack refresh and disabled
+  translation on unsupported platforms/pairs, with a 390-pixel viewport.
+* All 23 framework integration tests pass with no skips. The system-selected
+  target test now checks availability using `to: null`, matching its session.
+* One new app integration test passes: real greeting translation, streamed
+  Spanish phrases, line identifiers, and zero leaked sessions. Missed taps
+  are fatal.
+* iOS device debug build succeeds. Runtime verification on an iPhone remains
+  pending; no phone test was attempted in this continuation.
+* Formatting and workspace static analysis are clean.
+
+Changed files in this continuation:
+
+* `packages/apple_translation/example/lib/main.dart`: replaced TODO app.
+* `packages/apple_translation/example/integration_test/app_test.dart`: new.
+* `packages/apple_translation/example/test/app_test.dart`: new.
+* `packages/apple_translation/example/test_driver/integration_test.dart`: new.
+* `packages/apple_translation/example/integration_test/apple_translation_test.dart`:
+  formatting and system-selected-target availability correction.
+* Package README, CHANGELOG, HANDOFF_NOTES and example README: actual feature
+  coverage, usage, requirements, limitations and verified results.
+* Root README: Translation now marked done; this handoff updated.
+
+No dependencies or global configuration changed, and nothing was committed.
+The package was idle before editing. No other package's source was edited.
+Ordinary generated Flutter/Xcode artifacts were refreshed by the builds.
+
+Logs: `/tmp/core_ai_codex_translation_{unit_final,widgets,macos_final,app_macos,ios_build,workspace_analysis}.log`.
+Source backups are at the Translation path near the top of this file.
+
+SwiftUI sessions/download UI, automatic source selection for sessions, and
+general attributed-string styling remain explicitly unbridged. Source and
+target packs must be installed; low latency may need different packs. See
+the package README and HANDOFF_NOTES for details.
+
+Next smallest implementation task: SoundAnalysis, using the checklist in the
+original `docs/HANDOFF.md`. Speech follows; ImagePlayground/MediaIntelligence
+are still scaffolds. Device reruns can be handled when the iPhone is unlocked.
+
+## Earlier continuation
+
+The sections below record the previous pass; the Translation section above
+supersedes their earlier Translation inventory and changed-file statements.
+
+### apple_natural_language
+
+The named-entity integration test now calls `Tagger.requestAssets` for English
+`nameType` before tagging. Empty output still fails. Only the documented iOS
+case where every returned token is `Other` is skipped, with an explicit
+reason and the asset request result. Other incorrect tags still fail; macOS
+retains its strict named-entity assertions. README and CHANGELOG document the
+behavior and accurately distinguish the old phone run from this rerun.
+
+Fresh verification: 14 unit tests, 15 macOS integration tests (no skips), and
+the macOS example app test pass. The iPhone test build succeeded in 16.9 s,
+but Flutter never discovered the Dart VM service over wireless. A read-only
+`devicectl device info lockState` query reported `passcodeRequired: true`.
+Stopped only this continuation's Flutter drive process with SIGINT (PID
+71397); it has exited. Its exit code was 0 despite being interrupted, so it
+is **not a passing device test**. No phone test result was received.
+
+When the phone is unlocked, rerun from `packages/apple_natural_language/example`:
+
+```sh
+flutter drive --no-pub --driver=test_driver/integration_test.dart \
+  --target=integration_test/apple_natural_language_test.dart \
+  -d 00008150-001229241AF8401C --publish-port
+```
+
+If the suite skips named entities, report that separately from passing tests.
+Do not claim iOS tagging was verified merely because the runner exits 0.
+
+### apple_vision
+
+The README already existed beyond the original handoff's stated progress.
+Reviewed it, replaced `print` in the quick start with `dart:developer` logging,
+and corrected the Core ML/Core AI explanation: `core_ml` runs Core ML models
+directly but does not bridge them into Vision requests; `core_ai` runs
+`.aimodel`. Expanded the initial CHANGELOG and recorded fresh verification.
+Formatted the Pigeon schema only; the wire API and generated code are unchanged.
+
+All 18 unit tests and 16 macOS integration tests pass. First accurate OCR took
+about 70 s; the suite took 1:47 after launch. The iOS device debug build passes.
+Formatting and static analysis are clean. Updated the package handoff and
+root status to done for the implemented still-image API. iOS runtime tests
+were not run. The documented unbridged requests remain unimplemented.
+
+### core_ml
+
+Verified the existing implementation: 29 unit tests, 30 macOS integration
+tests, and the iOS device debug build pass. Formatting is clean.
+
+Found a false pass in the example integration test: scrolling a Card into
+view left its Run button below the window, so a tap missed and the test still
+passed. The test now scrolls to the button, requires it to be hit-testable,
+makes missed taps fatal (restoring the global test setting afterward), and
+requires each demo to finish with nonempty SelectableText output without an
+error. The corrected macOS app test passes in 4 s without the missed-tap
+warning. No runtime implementation changed. Updated the root status to done.
+
+### Workspace inventory
+
+`dart analyze --fatal-infos packages` passes for the entire workspace,
+including after the Core ML test correction. Translation's 36 unit tests
+also pass; its integration test file exists, but the example app still says
+TODO. Its integration suite was not run here. Root README now labels Speech,
+SoundAnalysis and Translation as in progress instead of not started, and
+removes the inaccurate claim that all unfinished packages are empty scaffolds.
+
+## Files edited
+
+* `README.md`: verified statuses and accurate partial-package descriptions.
+* `docs/HANDOFF.md`: added a pointer to this continuation, preserving old notes.
+* `docs/CODEX_HANDOFF.md`: this new record.
+* `packages/apple_natural_language/example/integration_test/apple_natural_language_test.dart`
+* `packages/apple_natural_language/README.md`
+* `packages/apple_natural_language/CHANGELOG.md`
+* `packages/apple_vision/README.md`
+* `packages/apple_vision/CHANGELOG.md`
+* `packages/apple_vision/HANDOFF_NOTES.md`
+* `packages/apple_vision/pigeons/apple_vision_api.dart`: formatting only.
+* `packages/core_ml/example/integration_test/app_test.dart`
+
+Builds also refreshed ordinary generated Flutter/Xcode artifacts. No source
+in Speech, SoundAnalysis, Translation, ImagePlayground, MediaIntelligence,
+Foundation Models, or Core AI was edited.
+
+## Logs and next work
+
+Local logs are in `/tmp/core_ai_codex_*.log`: `vision_macos`,
+`vision_ios_build`, `natural_language_macos`, `natural_language_app_macos`,
+`natural_language_ios`, `core_ml_unit`, `core_ml_macos`, `core_ml_ios_build`,
+`core_ml_app_macos` (original false pass), `core_ml_app_macos_fixed`,
+`translation_unit`, and `workspace_analysis_final`.
+
+Builds emitted an existing missing Metal toolchain search-path warning but
+succeeded. macOS runners reported inability to foreground their windows but
+completed the tests. Free disk space was about 4.3 GiB during verification;
+no files were deleted to make space.
+
+Next: finish SoundAnalysis using the detailed checklist in the original
+handoff, or finish Translation's example/docs and verify its integration
+suite. Speech still needs the rest of its Dart API and tests. ImagePlayground
+and MediaIntelligence remain scaffolds. Recheck for active edits before
+claiming a package. License/author/homepage decisions remain with the user.

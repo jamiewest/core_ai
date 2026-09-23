@@ -1,0 +1,28 @@
+name: apple_sound_analysis_example
+description: "Demonstrates the apple_sound_analysis plugin."
+publish_to: 'none'
+
+environment:
+  sdk: ^3.11.0
+
+resolution: workspace
+
+dependencies:
+  flutter:
+    sdk: flutter
+  apple_sound_analysis:
+    path: ../
+
+dev_dependencies:
+  integration_test:
+    sdk: flutter
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/speech.wav
+    - assets/tone.wav
+    - assets/SpeechOrTone.mlmodel

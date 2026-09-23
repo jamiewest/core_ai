@@ -1,0 +1,31 @@
+name: apple_speech
+description: >-
+  Flutter bindings for Apple's Speech framework: on-device speech-to-text for files and live audio.
+version: 0.1.0
+
+environment:
+  sdk: ^3.11.0
+  flutter: '>=3.38.0'
+
+resolution: workspace
+
+dependencies:
+  flutter:
+    sdk: flutter
+  meta: ^1.19.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  pigeon: ^29.0.2
+
+flutter:
+  plugin:
+    platforms:
+      ios:
+        pluginClass: AppleSpeechPlugin
+        sharedDarwinSource: true
+      macos:
+        pluginClass: AppleSpeechPlugin
+        sharedDarwinSource: true

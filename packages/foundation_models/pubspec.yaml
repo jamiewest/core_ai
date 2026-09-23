@@ -1,0 +1,31 @@
+name: foundation_models
+description: >-
+  Flutter bindings for Apple's Foundation Models framework: the on-device and Private Cloud Compute Apple Intelligence language models.
+version: 0.1.0
+
+environment:
+  sdk: ^3.11.0
+  flutter: '>=3.38.0'
+
+resolution: workspace
+
+dependencies:
+  flutter:
+    sdk: flutter
+  meta: ^1.19.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  pigeon: ^29.0.2
+
+flutter:
+  plugin:
+    platforms:
+      ios:
+        pluginClass: FoundationModelsPlugin
+        sharedDarwinSource: true
+      macos:
+        pluginClass: FoundationModelsPlugin
+        sharedDarwinSource: true

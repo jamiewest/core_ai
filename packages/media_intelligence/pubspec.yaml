@@ -1,0 +1,31 @@
+name: media_intelligence
+description: >-
+  Flutter bindings for Apple's MediaIntelligence framework: face grouping and video analysis.
+version: 0.1.0
+
+environment:
+  sdk: ^3.11.0
+  flutter: '>=3.38.0'
+
+resolution: workspace
+
+dependencies:
+  flutter:
+    sdk: flutter
+  meta: ^1.19.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  pigeon: ^29.0.2
+
+flutter:
+  plugin:
+    platforms:
+      ios:
+        pluginClass: MediaIntelligencePlugin
+        sharedDarwinSource: true
+      macos:
+        pluginClass: MediaIntelligencePlugin
+        sharedDarwinSource: true
