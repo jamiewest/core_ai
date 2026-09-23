@@ -14,13 +14,13 @@
     private let modules: [any SpeechModule]
     private let drive: Drive
     private let live: LiveAudioSource?
-    private let liveInput: AsyncStream<AnalyzerInput>.Continuation?
+    private let liveInput: AsyncThrowingStream<AnalyzerInput, Error>.Continuation?
     private let state = Mutex<(task: Task<Void, Never>?, cancelled: Bool)>((nil, false))
 
     private init(
       requestId: Int64, analyzer: SpeechAnalyzer, modules: [any SpeechModule],
       drive: @escaping Drive, live: LiveAudioSource?,
-      liveInput: AsyncStream<AnalyzerInput>.Continuation?
+      liveInput: AsyncThrowingStream<AnalyzerInput, Error>.Continuation?
     ) {
       self.requestId = requestId
       self.analyzer = analyzer
@@ -89,8 +89,10 @@
           source.stop()
           throw error
         }
-        var captured: AsyncStream<AnalyzerInput>.Continuation!
-        let stream = AsyncStream<AnalyzerInput>(bufferingPolicy: .unbounded) { captured = $0 }
+        var captured: AsyncThrowingStream<AnalyzerInput, Error>.Continuation!
+        let stream = AsyncThrowingStream<AnalyzerInput, Error>(bufferingPolicy: .unbounded) {
+          captured = $0
+        }
         let continuation = captured!
         let converter = BufferConverter(target: format)
         let run = AnalysisRun(
@@ -100,13 +102,17 @@
         do {
           try source.start(
             onBuffer: { buffer in
-              if let converted = try? converter.convert(buffer) {
-                continuation.yield(AnalyzerInput(buffer: converted))
-              }
+              do {
+                let converted = try converter.convert(buffer)
+                if converted.frameLength > 0 {
+                  continuation.yield(AnalyzerInput(buffer: converted))
+                }
+              } catch { continuation.finish(throwing: error) }
             },
             onEnd: { continuation.finish() })
         } catch {
           continuation.finish()
+          source.stop()
           throw error
         }
         return run
@@ -116,7 +122,7 @@
     /// Runs the analysis in the background, reporting through [callback].
     func start(callback: CallbackBox, onFinished: @escaping @Sendable () -> Void) {
       let task = Task { [self] in
-        await execute(callback: callback)
+        await execute(callback: callback, onFinished: onFinished)
         onFinished()
       }
       let cancelledEarly = state.withLock { state -> Bool in
@@ -142,7 +148,7 @@
       task?.cancel()
     }
 
-    private func execute(callback: CallbackBox) async {
+    private func execute(callback: CallbackBox, onFinished: @escaping @Sendable () -> Void) async {
       let analyzer = self.analyzer
       let drive = self.drive
       let requestId = self.requestId
@@ -173,11 +179,13 @@
           try await group.waitForAll()
         }
         live?.stop()
+        onFinished()
         guard !isCancelled else { return }
         let last = lastSample.current.flatMap(Modules.seconds)
         try? await callback.api.onRequestDone(requestId: requestId, lastSampleTime: last)
       } catch {
         live?.stop()
+        onFinished()
         guard !isCancelled else { return }
         try? await callback.api.onRequestError(
           requestId: requestId, error: Errors.translate(error).asMessage)

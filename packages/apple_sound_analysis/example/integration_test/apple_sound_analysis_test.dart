@@ -243,6 +243,43 @@ void main() {
     );
   });
 
+  test(
+    'duplicate request IDs leave the existing native analyzer intact',
+    () async {
+      final stream = await SoundStreamClassifier.create(
+        sampleRate: 16000,
+        classifier: SoundClassifier.model(fixtures.model),
+      );
+      final results = stream.results.toList();
+      try {
+        final bindings = SoundAnalysisBindings.instance;
+        final id = bindings.analyses.keys.single;
+        await expectLater(
+          bindings.host.startStreamAnalysis(
+            id,
+            AudioFormatMessage(sampleRate: 16000, channelCount: 1),
+            ClassifierConfigMessage(),
+            null,
+          ),
+          throwsA(
+            isA<PlatformException>().having(
+              (e) => e.code,
+              'code',
+              'invalid_argument',
+            ),
+          ),
+        );
+        await stream.add(
+          decodeFixtureWav(await File(fixtures.tone).readAsBytes()),
+        );
+        await stream.close();
+        expect((await results).first.top!.identifier, 'tone');
+      } finally {
+        await stream.cancel();
+      }
+    },
+  );
+
   test('cancelling input and cancelAll release native analyzers', () async {
     final a = await SoundStreamClassifier.create(sampleRate: 16000);
     final b = await SoundStreamClassifier.create(sampleRate: 16000);

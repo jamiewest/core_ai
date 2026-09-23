@@ -39,7 +39,8 @@ enum Errors {
 
   static func notRunning(_ requestId: Int64) -> AppleSoundAnalysisPigeonError {
     AppleSoundAnalysisPigeonError(
-      .notRunning, "No stream analysis \(requestId) is running. It may have finished or been cancelled.")
+      .notRunning,
+      "No stream analysis \(requestId) is running. It may have finished or been cancelled.")
   }
 
   /// Converts any error into a `AppleSoundAnalysisPigeonError`.

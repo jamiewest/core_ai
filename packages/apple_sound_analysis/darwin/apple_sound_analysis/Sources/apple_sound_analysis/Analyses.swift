@@ -163,7 +163,10 @@
     private let queue = DispatchQueue(label: "apple_sound_analysis.stream")
     private var framePosition: AVAudioFramePosition = 0
 
-    init(format message: AudioFormatMessage, request: SNClassifySoundRequest, forwarder: ResultForwarder)
+    init(
+      format message: AudioFormatMessage, request: SNClassifySoundRequest,
+      forwarder: ResultForwarder
+    )
       throws
     {
       guard message.sampleRate.isFinite, message.sampleRate > 0,

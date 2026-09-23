@@ -1,10 +1,68 @@
-# Handoff notes (2026-09-22)
+# Handoff notes
+
+## Current status (2026-09-23)
+
+All ten packages are implemented. `image_playground` and
+`media_intelligence` were finished on 2026-09-23, after Codex's
+continuation in `docs/CODEX_HANDOFF.md`.
+
+### Verification
+
+Re-run from clean example builds on macOS 27 on 2026-09-23:
+- `dart analyze --fatal-infos packages` and `dart format` are clean.
+- Unit tests: 214 pass across the ten packages.
+- Framework integration tests: 172 pass. The one skip is media_intelligence's
+  optional face-photo test.
+- Example-app integration tests: all 10 pass.
+
+| Package | Framework integration tests |
+|---|---|
+| natural_language | 15 |
+| sound_analysis | 14 |
+| speech | 14 |
+| translation | 23 |
+| vision | 16 |
+| core_ai | 21 |
+| core_ml | 30 |
+| foundation_models | 18 |
+| image_playground | 11 |
+| media_intelligence | 10 |
+
+The iOS example builds succeed for every package.
+
+### What is still unverified
+
+- **iPhone runs.** Only core_ai and foundation_models have run on the
+  iPhone. natural_language's rerun is pending: the phone was locked.
+- **Manual checks** that need a person or real media:
+  - live microphone in speech and sound_analysis;
+  - creating an image in the Image Playground sheet;
+  - grouping real faces in media_intelligence. Run its integration test with
+    `--dart-define=MEDIA_INTELLIGENCE_FACE_DIR=<photos of people>`.
+- **Headless image generation isn't possible on 27.** `ImageCreator()`
+  throws `notSupported` on macOS 27, even from a foreground app, so
+  image_playground bridges only the system sheet.
+
+### Environment
+
+- **Disk space.** The disk filled up during verification: 119 MiB were left
+  of 228 GiB. Each example build takes about 750 MB. Delete
+  `packages/*/example/build` when you're done; Flutter regenerates it. A
+  full disk shows up as strange failures, such as "Failed to obtain model
+  compilation cache" and truncated module caches.
+- **Git.** Codex created a repository with one commit, `aae85a1`. Everything
+  since is uncommitted. Don't commit unless the user asks.
+- **Left for the user:** LICENSE, and the podspec homepage and author.
+
+---
+
+## Original handoff (2026-09-22)
 
 Read this, then `docs/CONVENTIONS.md` (binding) and the root `README.md`.
-Nothing is committed. Don't commit unless the user asks.
 
 Codex continuation: see `docs/CODEX_HANDOFF.md` for subsequent changes and
-verification. The notes below preserve the original handoff.
+verification. The notes below preserve the original handoff, and the status
+above supersedes them.
 
 ## Goal
 

@@ -58,16 +58,25 @@
 
     func startRecognition(request: RecognitionRequestMessage) async throws {
       try await translatingErrors {
-        let run = try RecognitionRun.prepare(request, pump: pump)
-        try requests.register(request.requestId, run)
+        let pending = PendingRequest()
+        try requests.register(request.requestId, pending)
+        let run: RecognitionRun
+        do {
+          run = try RecognitionRun.prepare(request, pump: pump)
+          try pending.attach(run)
+        } catch {
+          requests.remove(request.requestId, ifSame: pending)
+          throw error
+        }
         let requests = self.requests
         let requestId = request.requestId
         // `SFSpeechRecognizer` delivers results on its queue (main by default).
         try await MainActor.run {
           do {
-            try run.start { requests.remove(requestId, ifSame: run) }
+            try run.start { requests.remove(requestId, ifSame: pending) }
           } catch {
-            requests.remove(requestId, ifSame: run)
+            run.cancel()
+            requests.remove(requestId, ifSame: pending)
             throw error
           }
         }
@@ -133,10 +142,10 @@
     func installAssets(requestId: Int64, modules: [ModuleConfigMessage]) async throws -> Bool {
       guard #available(iOS 26.0, macOS 26.0, *) else { throw Errors.requires26("AssetInventory") }
       return try await translatingErrors {
-        let built = try await Modules.build(modules, validate: false)
         let run = AssetInstallRun()
         try requests.register(requestId, run)
         defer { requests.remove(requestId, ifSame: run) }
+        let built = try await Modules.build(modules, validate: false)
         return try await run.install(requestId: requestId, modules: built, callback: callback)
       }
     }
@@ -176,16 +185,18 @@
     func startAnalysis(request: AnalysisRequestMessage) async throws {
       guard #available(iOS 26.0, macOS 26.0, *) else { throw Errors.requires26("SpeechAnalyzer") }
       try await translatingErrors {
-        let run = try await AnalysisRun.prepare(request)
+        let pending = PendingRequest()
+        try requests.register(request.requestId, pending)
         do {
-          try requests.register(request.requestId, run)
+          let run = try await AnalysisRun.prepare(request)
+          try pending.attach(run)
+          let requests = self.requests
+          let requestId = request.requestId
+          run.start(callback: callback) { requests.remove(requestId, ifSame: pending) }
         } catch {
-          run.cancel()
+          requests.remove(request.requestId, ifSame: pending)
           throw error
         }
-        let requests = self.requests
-        let requestId = request.requestId
-        run.start(callback: callback) { requests.remove(requestId, ifSame: run) }
       }
     }
 

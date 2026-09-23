@@ -22,8 +22,9 @@
     private func work<T>(_ body: @escaping () throws -> T) async throws -> T {
       try await withCheckedThrowingContinuation { continuation in
         queue.async {
-          do { continuation.resume(returning: try body()) }
-          catch { continuation.resume(throwing: Errors.translate(error)) }
+          do { continuation.resume(returning: try body()) } catch {
+            continuation.resume(throwing: Errors.translate(error))
+          }
         }
       }
     }
@@ -37,13 +38,13 @@
           throw Errors.notFound("No sound model at \(path).")
         }
         let model: MLModel
-        if let cached = models[url.path] { model = cached }
-        else {
+        if let cached = models[url.path] {
+          model = cached
+        } else {
           let compiled: URL
           let temporary = ["mlmodel", "mlpackage"].contains(url.pathExtension.lowercased())
           compiled = temporary ? try MLModel.compileModel(at: url) : url
-          do { model = try MLModel(contentsOf: compiled) }
-          catch {
+          do { model = try MLModel(contentsOf: compiled) } catch {
             if temporary { try? FileManager.default.removeItem(at: compiled) }
             throw error
           }
@@ -72,7 +73,9 @@
           if allowed { request.windowDuration = duration }
         @unknown default: allowed = false
         }
-        guard allowed else { throw Errors.invalidArgument("Unsupported window duration: \(seconds).") }
+        guard allowed else {
+          throw Errors.invalidArgument("Unsupported window duration: \(seconds).")
+        }
       }
       if let overlap = config.overlapFactor {
         guard overlap.isFinite, overlap >= 0, overlap < 1 else {
@@ -84,6 +87,9 @@
     }
 
     private func forwarder(_ id: Int64, _ maximum: Int64?) throws -> ResultForwarder {
+      guard !registry.contains(id) else {
+        throw Errors.invalidArgument("Request \(id) is already running.")
+      }
       if let maximum, maximum <= 0 {
         throw Errors.invalidArgument("maximumClassifications must be positive.")
       }
@@ -98,33 +104,42 @@
         var maximum: Double?
         switch request.windowDurationConstraint {
         case .enumeratedDurations(let values): durations = values.map { $0.seconds }
-        case .durationRange(let range): minimum = range.start.seconds; maximum = range.end.seconds
+        case .durationRange(let range):
+          minimum = range.start.seconds
+          maximum = range.end.seconds
         @unknown default: break
         }
         return ClassifierInfoMessage(
           knownClassifications: request.knownClassifications,
-          windowDurationSeconds: request.windowDuration.seconds, overlapFactor: request.overlapFactor,
+          windowDurationSeconds: request.windowDuration.seconds,
+          overlapFactor: request.overlapFactor,
           allowedWindowDurationsSeconds: durations,
           minimumWindowSeconds: minimum, maximumWindowSeconds: maximum)
       }
     }
 
-    func startFileAnalysis(requestId: Int64, path: String, config: ClassifierConfigMessage,
-      maximumClassifications: Int64?) async throws {
+    func startFileAnalysis(
+      requestId: Int64, path: String, config: ClassifierConfigMessage,
+      maximumClassifications: Int64?
+    ) async throws {
       try await work { [self] in
         let observer = try forwarder(requestId, maximumClassifications)
-        let analysis = try FileAnalysis(url: URL(fileURLWithPath: path),
+        let analysis = try FileAnalysis(
+          url: URL(fileURLWithPath: path),
           request: makeRequest(config), forwarder: observer)
         try registry.insert(requestId, analysis)
         analysis.start()
       }
     }
 
-    func startStreamAnalysis(requestId: Int64, format: AudioFormatMessage,
-      config: ClassifierConfigMessage, maximumClassifications: Int64?) async throws {
+    func startStreamAnalysis(
+      requestId: Int64, format: AudioFormatMessage,
+      config: ClassifierConfigMessage, maximumClassifications: Int64?
+    ) async throws {
       try await work { [self] in
         let observer = try forwarder(requestId, maximumClassifications)
-        let analysis = try StreamAnalysis(format: format, request: makeRequest(config), forwarder: observer)
+        let analysis = try StreamAnalysis(
+          format: format, request: makeRequest(config), forwarder: observer)
         try registry.insert(requestId, analysis)
       }
     }
@@ -147,22 +162,27 @@
       }
     }
 
-    func startMicrophoneAnalysis(requestId: Int64, config: ClassifierConfigMessage,
-      maximumClassifications: Int64?) async throws {
+    func startMicrophoneAnalysis(
+      requestId: Int64, config: ClassifierConfigMessage,
+      maximumClassifications: Int64?
+    ) async throws {
       try await work { [self] in
         guard !registry.microphoneIsRunning else {
           throw AppleSoundAnalysisPigeonError(.busy, "A microphone analysis is already running.")
         }
         guard AVCaptureDevice.authorizationStatus(for: .audio) == .authorized else {
-          throw AppleSoundAnalysisPigeonError(.permissionDenied, "Microphone permission has not been granted.")
+          throw AppleSoundAnalysisPigeonError(
+            .permissionDenied, "Microphone permission has not been granted.")
         }
         let observer = try forwarder(requestId, maximumClassifications)
         let analysis = try MicrophoneAnalysis(request: makeRequest(config), forwarder: observer)
+        var registered = false
         do {
           try registry.insert(requestId, analysis)
+          registered = true
           try analysis.start()
         } catch {
-          registry.stop(requestId)
+          if registered { registry.stop(requestId) }
           analysis.stop()
           throw error
         }

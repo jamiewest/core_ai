@@ -30,7 +30,12 @@ import 'package:pigeon/pigeon.dart';
 // ---------------------------------------------------------------------------
 /// Mirrors `SFSpeechRecognizerAuthorizationStatus` and
 /// `AVAuthorizationStatus`.
-enum AuthorizationStatusMessage { notDetermined, denied, restricted, authorized }
+enum AuthorizationStatusMessage {
+  notDetermined,
+  denied,
+  restricted,
+  authorized,
+}
 
 /// Mirrors `SFSpeechRecognitionTaskHint`.
 enum TaskHintMessage { unspecified, dictation, search, confirmation }
@@ -51,7 +56,11 @@ enum AudioSourceKindMessage {
 }
 
 /// The kind of a `SpeechModule`.
-enum ModuleKindMessage { speechTranscriber, dictationTranscriber, speechDetector }
+enum ModuleKindMessage {
+  speechTranscriber,
+  dictationTranscriber,
+  speechDetector,
+}
 
 /// Mirrors `SpeechTranscriber.Preset`.
 enum SpeechTranscriberPresetMessage {
@@ -99,7 +108,14 @@ enum SensitivityLevelMessage { low, medium, high }
 enum ModelRetentionMessage { whileInUse, lingering, processLifetime }
 
 /// Mirrors `TaskPriority`.
-enum TaskPriorityMessage { background, utility, low, medium, high, userInitiated }
+enum TaskPriorityMessage {
+  background,
+  utility,
+  low,
+  medium,
+  high,
+  userInitiated,
+}
 
 /// Mirrors `AssetInventory.Status`.
 enum AssetStatusMessage { unsupported, supported, downloading, installed }
@@ -433,7 +449,9 @@ abstract class AppleSpeechHostApi {
   bool releaseLocale(String locale);
 
   @async
-  AudioFormatMessage? bestAvailableAudioFormat(List<ModuleConfigMessage> modules);
+  AudioFormatMessage? bestAvailableAudioFormat(
+    List<ModuleConfigMessage> modules,
+  );
 
   /// Starts an analysis; results arrive through the callback API.
   @async

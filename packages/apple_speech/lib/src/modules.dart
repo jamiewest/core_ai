@@ -310,10 +310,7 @@ List<TranscriptionOptionMessage> _transcriptionOptions(
 ];
 
 List<ReportingOptionMessage> _reportingOptions(Set<ReportingOption> options) =>
-    [
-      for (final option in options)
-        ReportingOptionMessage.values[option.index],
-    ];
+    [for (final option in options) ReportingOptionMessage.values[option.index]];
 
 List<ResultAttributeOptionMessage> _attributeOptions(
   Set<ResultAttributeOption> options,
@@ -323,12 +320,17 @@ List<ResultAttributeOptionMessage> _attributeOptions(
 ];
 
 Future<List<String>> _supportedLocales(ModuleKindMessage kind) =>
-    guardPlatformCall(() => SpeechBindings.instance.host.supportedLocales(kind));
+    guardPlatformCall(
+      () => SpeechBindings.instance.host.supportedLocales(kind),
+    );
 
 Future<List<String>> _installedLocales(ModuleKindMessage kind) =>
-    guardPlatformCall(() => SpeechBindings.instance.host.installedLocales(kind));
+    guardPlatformCall(
+      () => SpeechBindings.instance.host.installedLocales(kind),
+    );
 
 Future<String?> _equivalent(ModuleKindMessage kind, String locale) =>
     guardPlatformCall(
-      () => SpeechBindings.instance.host.supportedLocaleEquivalent(kind, locale),
+      () =>
+          SpeechBindings.instance.host.supportedLocaleEquivalent(kind, locale),
     );

@@ -28,5 +28,9 @@
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Transcribe audio when you choose Listen.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Transcribe the sample or microphone using the legacy recognizer when you choose it.</string>
 </dict>
 </plist>

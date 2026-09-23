@@ -25,6 +25,40 @@ final class Mutex<Value>: @unchecked Sendable {
   var current: Value { withLock { $0 } }
 }
 
+/// Reserves an ID before asynchronous preparation; forwards early cancellation.
+final class PendingRequest: ActiveRequest, @unchecked Sendable {
+  private let state = Mutex<(run: ActiveRequest?, cancelled: Bool, finished: Bool)>(
+    (nil, false, false))
+
+  func attach(_ run: ActiveRequest) throws {
+    let flags = state.withLock { state -> (Bool, Bool) in
+      state.run = run
+      return (state.cancelled, state.finished)
+    }
+    if flags.0 {
+      run.cancel()
+      throw CancellationError()
+    }
+    if flags.1 { run.finishInput() }
+  }
+
+  func finishInput() {
+    let run = state.withLock { state -> ActiveRequest? in
+      state.finished = true
+      return state.run
+    }
+    run?.finishInput()
+  }
+
+  func cancel() {
+    let run = state.withLock { state -> ActiveRequest? in
+      state.cancelled = true
+      return state.run
+    }
+    run?.cancel()
+  }
+}
+
 /// Tracks in-flight requests by their Dart-chosen id.
 final class RequestRegistry: @unchecked Sendable {
   private let requests = Mutex<[Int64: ActiveRequest]>([:])

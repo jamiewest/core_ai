@@ -16,17 +16,16 @@ platform channels.
 | [`foundation_models`](packages/foundation_models) | Foundation Models | Apple Intelligence language models: chat, streaming, guided generation, tools, Private Cloud Compute | **Done**, tested on macOS 27 and iOS 27 hardware |
 | [`apple_vision`](packages/apple_vision) | Vision | Image analysis: text, barcodes, faces, poses, classification, saliency, segmentation | **Done**, tested on macOS 27; iOS device build verified |
 | [`core_ml`](packages/core_ml) | Core ML | Run `.mlmodel` / `.mlpackage` models | **Done**, tested on macOS 27; iOS device build verified |
-| [`apple_speech`](packages/apple_speech) | Speech | On-device speech to text, for files and live audio | In progress: native implementation and partial Dart API |
-| [`apple_sound_analysis`](packages/apple_sound_analysis) | SoundAnalysis | Sound classification | In progress: Pigeon API and partial native implementation |
+| [`apple_speech`](packages/apple_speech) | Speech | On-device speech to text, for files and live audio | **Done**, file/live-pipeline tested on macOS 27; iOS build verified; microphone check pending |
+| [`apple_sound_analysis`](packages/apple_sound_analysis) | SoundAnalysis | Sound classification | **Done**, file/PCM tested on macOS 27; iOS build verified; live microphone check pending |
 | [`apple_natural_language`](packages/apple_natural_language) | NaturalLanguage | Language ID, tagging, tokenization, embeddings | Done on macOS 27; iOS named-entity test updated, device rerun pending |
 | [`apple_translation`](packages/apple_translation) | Translation | On-device translation | **Done**, tested on macOS 27; iOS device build verified |
-| [`image_playground`](packages/image_playground) | ImagePlayground | On-device image generation | Not started |
-| [`media_intelligence`](packages/media_intelligence) | MediaIntelligence | Face grouping, video highlights and key frames | Not started |
+| [`image_playground`](packages/image_playground) | ImagePlayground | On-device image generation | **Done**, tested on macOS 27 (sheet opens and cancels); iOS build verified; image creation is a manual check |
+| [`media_intelligence`](packages/media_intelligence) | MediaIntelligence | Face grouping, video highlights and key frames | **Done**, tested on macOS 27 (video, face-library lifecycle); iOS build verified; grouping real faces is a manual check |
 
-Packages marked "in progress" have partial or unverified implementations;
-"not started" packages are scaffolds. See [the handoff](docs/HANDOFF.md) and
-[Codex's continuation notes](docs/CODEX_HANDOFF.md) for remaining work and
-verification results.
+Every package is implemented and its tests pass against the real frameworks
+on macOS 27. The Status column says what still needs a device run or a
+manual check. See [the handoff](docs/HANDOFF.md) for what remains.
 
 ## Which one do I want?
 

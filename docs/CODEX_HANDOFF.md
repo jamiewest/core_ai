@@ -1,9 +1,21 @@
-# Codex continuation (2026-09-22)
+# Codex continuation (updated 2026-09-23)
 
-Status: Codex is completing `apple_sound_analysis`; other packages are not
-claimed. SoundAnalysis backup:
-`/var/folders/54/d3l1d78d4ds62ghx9393wypc0000gn/T/core_ai_sound_codex_mvmiaptp`.
-Translation is finished. The user requested
+> Superseded: image_playground and media_intelligence were finished after
+> this was written. See "Current status" at the top of `docs/HANDOFF.md`.
+
+Status: Codex is completing `packages/image_playground` only.
+Original snapshot: `/Users/jamie/Developer/core_ai_backups/image_playground_20260923_pu8j2z1z`.
+Speech is complete; existing changes elsewhere are preserved. Speech originals, completed source, checksums and logs:
+`/Users/jamie/Developer/core_ai_backups/speech_20260923_x9ng2hr2`.
+A Git repository now exists (initial commit `aae85a1`); earlier no-Git notes
+below are historical. Existing SoundAnalysis changes were preserved.
+
+A durable completed snapshot, surviving original files,
+and test logs are saved at:
+`/Users/jamie/Developer/core_ai_backups/sound_analysis_20260923_pdr1c1od`.
+The earlier SoundAnalysis temporary backup is now incomplete after the
+overnight pause; it must not be treated as a full original baseline.
+Translation is also finished. The user requested
 one package at a time, starting with those closest to completion.
 Translation source backup:
 `/var/folders/54/d3l1d78d4ds62ghx9393wypc0000gn/T/core_ai_translation_codex_jld10hko`.
@@ -17,6 +29,103 @@ and source hashes were saved at:
 No commits, global configuration changes, or dependency additions. Existing
 Claude processes were left alone. The selected source trees were idle before
 editing, and a final comparison found no unexpected source edits there.
+
+## Speech completion (fourth continuation)
+
+Completed `apple_speech` on 2026-09-23, continuing Claude's existing native
+implementation and partial Dart files. Finished analyzer/recognizer/assets/
+permission APIs, typed results, buffered/cancellable requests, testing bindings,
+Material 3 example, synthetic fixture, tests and docs.
+
+Fixed startup/duplicate-ID cleanup, terminal callback ordering, retained
+microphone buffers, conversion-error propagation and iOS session restoration.
+The schema was formatted; generated messages were unchanged. No dependencies,
+global settings or commits. Existing Claude processes and other package source
+were left alone. iOS CocoaPods build wiring was generated normally and kept.
+
+Verified: 17 API unit + four widget + 14 framework integration + one real app
+integration test = **36 passing tests**, no skips. Tests verify exact speech
+text, word times/confidence, UTF-16 ranges, dictation, file/media/simulated-live
+sources, finalization, errors, cancellation and zero leaked requests. The iOS
+unsigned device build succeeds (14.6 s); workspace analysis and formatting are
+clean. The example test requires real output and makes missed taps fatal.
+
+Manual checks remain: live microphone hardware, iPhone runtime, authorized
+legacy recognition, model downloads and locale-reservation mutations. Tests
+never prompt, record, download assets or change reservations. An iOS build is
+not a runtime result. Apple's aggregate asset status reported `supported` even
+for an installed working English model; the API also checks installedLocales.
+Detector-only analysis is rejected to prevent a native trap; detector alongside
+transcription produced no independent events on this Mac.
+
+Detailed takeover notes: `packages/apple_speech/HANDOFF_NOTES.md`.
+Final logs: `/tmp/core_ai_codex_speech_{unit_final,macos_final,app_macos,ios_build,workspace_analysis}.log`,
+also copied into the durable backup's `logs/` directory.
+
+**Next: ImagePlayground, then MediaIntelligence**, both still scaffolds. Keep
+working one package at a time and recheck for active edits. Manual/device
+verification may be handled separately. All older “Speech next” entries below
+are historical checkpoints superseded by this completion.
+
+## SoundAnalysis completion (third continuation)
+
+Completed `apple_sound_analysis` on 2026-09-23. The Pigeon schema/generated
+messages were already present and are unchanged. Added the Swift host API,
+plugin registration, public Dart API, callback routing, test bindings,
+example, tests, and docs around Claude's original native analysis classes.
+
+Features: built-in/custom Core ML classifiers; labels/window constraints;
+file, pushed float32 PCM, and microphone classification; typed results and
+errors; permission queries/requests; cancellation and cancel-all cleanup.
+The example has speech/tone/PCM buttons, a custom-model toggle, explicit
+microphone permission flow and Stop. App permissions and macOS audio-input
+entitlements are configured.
+
+Lifecycle fixes include native event ordering, copied microphone tap buffers,
+serialized/copied PCM input, cancellation during startup, duplicate-ID
+protection, and iOS audio-session category restoration. Fixed the unfinished
+native error enum reference (`SNError.Code`). Models and compiled temporary
+files are cached for the engine lifetime; cancel-all does not clear the cache.
+
+Verified results, all without skips:
+
+* 16 Dart unit tests with fakes.
+* 14 real-framework macOS integration tests (speech/tone confidence and timing,
+  mono/stereo PCM, constraints, malformed input, duplicate IDs and cleanup).
+* One real-framework macOS example integration test.
+* Final iOS device debug build succeeds (8.2 s Xcode build).
+* Workspace static analysis clean; Dart formatting produces no changes.
+
+Live microphone capture and iPhone runtime testing are still unverified.
+Automated tests do not request permission or record the microphone. Use the
+example's Listen and Stop buttons for a manual microphone check. An iOS
+build result is not a device-runtime result.
+
+The built-in maximum window is an exclusive upper bound of 15.0000625 s on
+this SDK, and the custom fixture's default 0.975 s is not its only valid
+window. The API exposes the real model constraints and validates against
+them. These correct two assumptions in the original SoundAnalysis notes.
+
+Source changes are confined to `packages/apple_sound_analysis`, plus the root
+README and this handoff. No dependencies, global settings, or other package
+implementations changed. No commits. Generated Flutter/Xcode build artifacts
+were refreshed normally.
+
+Main files: native `AppleSoundAnalysisHostApiImpl.swift`, plugin registration,
+`Analyses.swift` and `Errors.swift`; Dart `lib/src/{sound,bindings,errors}.dart`,
+public exports and `testing.dart`; `test/api_test.dart`; example
+`lib/{main,fixtures}.dart`, two integration tests, test driver, asset manifest,
+microphone usage strings and entitlements; README, CHANGELOG and package
+`HANDOFF_NOTES.md`.
+
+Detailed package handoff: `packages/apple_sound_analysis/HANDOFF_NOTES.md`.
+Final logs are copied into the durable snapshot's `logs/` directory, as well
+as `/tmp/core_ai_codex_sound_{unit_final,macos_final,app_macos,ios_build_final,workspace_analysis}.log`.
+
+**Next package: Speech.** Recheck for active edits, then use its existing
+handoff to finish the remaining Dart API, tests, example and docs. Keep
+ImagePlayground and MediaIntelligence for later; both remain scaffolds.
+Unlocked-device verification can be a separate pass.
 
 ## Translation completion (second continuation)
 
@@ -66,9 +175,9 @@ general attributed-string styling remain explicitly unbridged. Source and
 target packs must be installed; low latency may need different packs. See
 the package README and HANDOFF_NOTES for details.
 
-Next smallest implementation task: SoundAnalysis, using the checklist in the
-original `docs/HANDOFF.md`. Speech follows; ImagePlayground/MediaIntelligence
-are still scaffolds. Device reruns can be handled when the iPhone is unlocked.
+This checkpoint's next task was SoundAnalysis, now completed above. Speech
+is next; ImagePlayground/MediaIntelligence remain scaffolds. Device reruns
+can be handled when the iPhone is unlocked.
 
 ## Earlier continuation
 

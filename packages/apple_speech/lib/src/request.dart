@@ -25,6 +25,8 @@ abstract base class SpeechRequest<T> extends RequestSink {
   late final StreamController<T> _controller;
   final Completer<void> _done = Completer<void>();
   bool _ended = false;
+  Future<void>? _startup;
+  Future<void>? _cancellation;
 
   /// The results, in order. The stream closes when the request finishes and
   /// reports a [SpeechException] if it fails.
@@ -42,19 +44,20 @@ abstract base class SpeechRequest<T> extends RequestSink {
   Future<void> begin(Future<void> Function() start) async {
     bindings.registerRequest(requestId, this);
     try {
-      await guardPlatformCall(start);
+      await (_startup = guardPlatformCall(start));
     } on Object catch (error, stack) {
       _ended = true;
       bindings.unregisterRequest(requestId);
       unawaited(_controller.close());
-      _done.completeError(error, stack);
+      if (!_done.isCompleted) _done.completeError(error, stack);
       rethrow;
     }
   }
 
   /// Ends live input (stops the microphone) and waits for the final results.
   ///
-  /// For files this stops early and finalizes what was read so far.
+  /// Analyzer file input continues to its end; legacy recognition asks its
+  /// task to finish with the audio received so far.
   Future<void> finish() async {
     if (!_ended) {
       await guardPlatformCall(() => bindings.host.finishRequest(requestId));
@@ -64,13 +67,26 @@ abstract base class SpeechRequest<T> extends RequestSink {
 
   /// Stops the request without waiting for more results. The [results]
   /// stream closes without an error. Safe to call more than once.
-  Future<void> cancel() async {
+  @override
+  Future<void> cancel() => _cancellation ??= _cancel();
+
+  Future<void> _cancel() async {
     if (_ended) return;
     _ended = true;
     bindings.unregisterRequest(requestId);
-    if (!_done.isCompleted) _done.complete();
     unawaited(_controller.close());
-    await guardPlatformCall(() => bindings.host.cancelRequest(requestId));
+    try {
+      // Native preparation may still be creating its request. Wait until it
+      // either registers or fails before sending cancellation.
+      try {
+        await _startup;
+      } on Object {
+        /* Startup already reported failure. */
+      }
+      await guardPlatformCall(() => bindings.host.cancelRequest(requestId));
+    } finally {
+      if (!_done.isCompleted) _done.complete();
+    }
   }
 
   /// Adds a converted result.

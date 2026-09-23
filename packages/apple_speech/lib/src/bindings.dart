@@ -5,6 +5,9 @@ import 'messages.g.dart';
 /// Every method does nothing by default; implementations override what
 /// their request produces.
 abstract class RequestSink {
+  /// Cancels this request when supported.
+  Future<void> cancel() async {}
+
   /// A `SpeechAnalyzer` module produced a result.
   void onAnalyzerResult(AnalyzerResultMessage result) {}
 
@@ -61,6 +64,9 @@ class SpeechBindings {
 
   /// Stops routing events for [requestId].
   void unregisterRequest(int requestId) => _requests.remove(requestId);
+
+  /// Snapshot of currently routed requests.
+  List<RequestSink> get activeRequests => List.of(_requests.values);
 
   /// How many requests are routed on the Dart side.
   int get routedRequestCount => _requests.length;

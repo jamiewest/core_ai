@@ -21,6 +21,7 @@ class FakeHost implements AppleSoundAnalysisHostApi {
   Completer<void>? startGate;
   Completer<void>? sampleGate;
   PlatformException? startError;
+  PlatformException? sampleError;
   bool resultDuringStart = false;
   ClassifierConfigMessage? config;
   AudioFormatMessage? format;
@@ -80,6 +81,9 @@ class FakeHost implements AppleSoundAnalysisHostApi {
   Future<void> analyzeSamples(int requestId, Uint8List float32Samples) async {
     calls.add('samples:$requestId');
     if (sampleGate != null) await sampleGate!.future;
+    final error = sampleError;
+    sampleError = null;
+    if (error != null) throw error;
     samples.add(float32Samples);
   }
 
@@ -321,6 +325,35 @@ void main() {
       SoundStreamClassifier.create(sampleRate: 16000),
       throwsA(isA<SoundAnalysisException>()),
     );
+  });
+
+  test(
+    'a rejected PCM write does not prevent later writes or completion',
+    () async {
+      final stream = await SoundStreamClassifier.create(sampleRate: 16000);
+      final results = stream.results.toList();
+      host.sampleError = PlatformException(code: 'invalid_argument');
+      final rejected = stream.add(Float32List(1));
+      final accepted = stream.add(Float32List.fromList([0.25]));
+      await expectLater(rejected, throwsA(isA<SoundAnalysisException>()));
+      await accepted;
+      await stream.close();
+      expect(await results, hasLength(1));
+      expect(host.samples, hasLength(1));
+    },
+  );
+
+  test('cancelling one analysis preserves the other callback route', () async {
+    final a = SoundAnalyzer.classifyFile('/a').listen((_) => fail('cancelled'));
+    final b = SoundAnalyzer.classifyFile('/b').toList();
+    await a.cancel();
+    host.result(1);
+    host.result(2);
+    host.complete(2);
+    expect((await b).single.top!.identifier, 'speech');
+    expect(host.calls.where((call) => call.startsWith('cancel:')), [
+      'cancel:1',
+    ]);
   });
 
   test(

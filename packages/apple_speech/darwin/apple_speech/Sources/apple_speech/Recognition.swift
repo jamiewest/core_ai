@@ -108,6 +108,7 @@
 
     /// Starts recognizing; [onFinished] runs once the request has ended.
     func start(onFinished: @escaping @Sendable () -> Void) throws {
+      if state.withLock({ $0.cancelled }) { throw CancellationError() }
       let requestId = self.requestId
       let task = recognizer.recognitionTask(with: request) { [weak self] result, error in
         guard let self else { return }
@@ -129,7 +130,14 @@
           }
         }
       }
-      state.withLock { $0.task = task }
+      let stopped = state.withLock { state -> Bool in
+        state.task = task
+        return state.cancelled || state.ended
+      }
+      if stopped {
+        task.cancel()
+        return
+      }
       if let live, let bufferRequest = request as? SFSpeechAudioBufferRecognitionRequest {
         do {
           try live.start(
@@ -150,8 +158,8 @@
       }
       guard first else { return }
       live?.stop()
-      pump.send(job)
       onFinished()
+      pump.send(job)
     }
 
     func finishInput() {

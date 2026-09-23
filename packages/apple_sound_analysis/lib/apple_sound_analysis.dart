@@ -1,4 +1,4 @@
-/// Flutter bindings for Apple's SoundAnalysis framework: on-device sound classification.
+/// On-device sound classification with Apple's SoundAnalysis framework.
 library;
 
 export 'src/errors.dart' show SoundAnalysisErrorCode, SoundAnalysisException;

@@ -24,6 +24,7 @@
     func install(
       requestId: Int64, modules: [any SpeechModule], callback: CallbackBox
     ) async throws -> Bool {
+      if state.withLock({ $0.cancelled }) { throw CancellationError() }
       guard let request = try await AssetInventory.assetInstallationRequest(supporting: modules)
       else { return false }
       let box = UncheckedBox(request)

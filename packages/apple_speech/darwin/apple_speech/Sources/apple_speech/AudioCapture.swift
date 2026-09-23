@@ -19,7 +19,13 @@ protocol LiveAudioSource: AnyObject {
 final class MicrophoneCapture: LiveAudioSource, @unchecked Sendable {
   private let engine = AVAudioEngine()
   private let configureSession: Bool
-  private let running = Mutex(false)
+  private let lifecycle = NSRecursiveLock()
+  private var running = false
+  private var stopped = false
+  #if os(iOS)
+    private var previousSession:
+      (AVAudioSession.Category, AVAudioSession.Mode, AVAudioSession.CategoryOptions)?
+  #endif
   let format: AVAudioFormat
 
   /// Prepares the engine and reads the input format. Configures the iOS
@@ -29,10 +35,15 @@ final class MicrophoneCapture: LiveAudioSource, @unchecked Sendable {
     #if os(iOS)
       if configureSession {
         let session = AVAudioSession.sharedInstance()
+        previousSession = (session.category, session.mode, session.categoryOptions)
         do {
           try session.setCategory(.record, mode: .measurement, options: .duckOthers)
           try session.setActive(true, options: .notifyOthersOnDeactivation)
         } catch {
+          if let previousSession {
+            try? session.setCategory(
+              previousSession.0, mode: previousSession.1, options: previousSession.2)
+          }
           throw AppleSpeechPigeonError(
             .microphoneUnavailable,
             "Could not activate the audio session: \(error.localizedDescription)")
@@ -43,8 +54,12 @@ final class MicrophoneCapture: LiveAudioSource, @unchecked Sendable {
     guard format.sampleRate > 0, format.channelCount > 0 else {
       #if os(iOS)
         if configureSession {
-          try? AVAudioSession.sharedInstance().setActive(
-            false, options: .notifyOthersOnDeactivation)
+          let session = AVAudioSession.sharedInstance()
+          try? session.setActive(false, options: .notifyOthersOnDeactivation)
+          if let previousSession {
+            try? session.setCategory(
+              previousSession.0, mode: previousSession.1, options: previousSession.2)
+          }
         }
       #endif
       throw AppleSpeechPigeonError(
@@ -56,6 +71,10 @@ final class MicrophoneCapture: LiveAudioSource, @unchecked Sendable {
   func start(
     onBuffer: @escaping (AVAudioPCMBuffer) -> Void, onEnd: @escaping () -> Void
   ) throws {
+    lifecycle.lock()
+    defer { lifecycle.unlock() }
+    guard !stopped else { throw CancellationError() }
+    guard !running else { return }
     let input = engine.inputNode
     input.installTap(onBus: 0, bufferSize: 4096, format: format) { buffer, _ in
       onBuffer(buffer)
@@ -70,25 +89,29 @@ final class MicrophoneCapture: LiveAudioSource, @unchecked Sendable {
         .microphoneUnavailable,
         "Could not start the microphone: \(error.localizedDescription)")
     }
-    running.withLock { $0 = true }
+    running = true
   }
 
   func stop() {
-    let wasRunning = running.withLock { value -> Bool in
-      defer { value = false }
-      return value
+    lifecycle.lock()
+    defer { lifecycle.unlock() }
+    guard !stopped else { return }
+    stopped = true
+    if running {
+      engine.inputNode.removeTap(onBus: 0)
+      engine.stop()
+      running = false
     }
-    guard wasRunning else { return }
-    engine.inputNode.removeTap(onBus: 0)
-    engine.stop()
     deactivateSession()
   }
 
   private func deactivateSession() {
     #if os(iOS)
-      if configureSession {
-        try? AVAudioSession.sharedInstance().setActive(
-          false, options: .notifyOthersOnDeactivation)
+      if configureSession, let previous = previousSession {
+        previousSession = nil
+        let session = AVAudioSession.sharedInstance()
+        try? session.setActive(false, options: .notifyOthersOnDeactivation)
+        try? session.setCategory(previous.0, mode: previous.1, options: previous.2)
       }
     #endif
   }
@@ -146,7 +169,22 @@ final class BufferConverter {
 
   func convert(_ buffer: AVAudioPCMBuffer) throws -> AVAudioPCMBuffer {
     let source = buffer.format
-    if source == target { return buffer }
+    if source == target {
+      // Engine tap buffers are reused after the callback returns. AnalyzerInput
+      // keeps the buffer, so give it independent storage.
+      guard let copy = AVAudioPCMBuffer(pcmFormat: source, frameCapacity: buffer.frameLength) else {
+        throw AppleSpeechPigeonError(.audioFormat, "Could not copy the audio buffer.")
+      }
+      copy.frameLength = buffer.frameLength
+      let input = UnsafeMutableAudioBufferListPointer(buffer.mutableAudioBufferList)
+      let output = UnsafeMutableAudioBufferListPointer(copy.mutableAudioBufferList)
+      for index in input.indices {
+        if let from = input[index].mData, let to = output[index].mData {
+          memcpy(to, from, Int(input[index].mDataByteSize))
+        }
+      }
+      return copy
+    }
     if converter == nil || converter?.inputFormat != source {
       guard let created = AVAudioConverter(from: source, to: target) else {
         throw AppleSpeechPigeonError(
