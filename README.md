@@ -14,14 +14,14 @@ platform channels.
 |---|---|---|---|
 | [`core_ai`](packages/core_ai) | Core AI | Run your own `.aimodel` models: tensors, images, stateful models, compute-stream pipelines, the specialization cache | **Done**, tested on macOS 27 and iOS 27 hardware |
 | [`foundation_models`](packages/foundation_models) | Foundation Models | Apple Intelligence language models: chat, streaming, guided generation, tools, Private Cloud Compute | **Done**, tested on macOS 27 and iOS 27 hardware |
-| [`apple_vision`](packages/apple_vision) | Vision | Image analysis: text, barcodes, faces, poses, classification, saliency, segmentation | **Done**, tested on macOS 27; iOS device build verified |
-| [`core_ml`](packages/core_ml) | Core ML | Run `.mlmodel` / `.mlpackage` models | **Done**, tested on macOS 27; iOS device build verified |
-| [`apple_speech`](packages/apple_speech) | Speech | On-device speech to text, for files and live audio | **Done**, file/live-pipeline tested on macOS 27; iOS build verified; microphone check pending |
-| [`apple_sound_analysis`](packages/apple_sound_analysis) | SoundAnalysis | Sound classification | **Done**, file/PCM tested on macOS 27; iOS build verified; live microphone check pending |
-| [`apple_natural_language`](packages/apple_natural_language) | NaturalLanguage | Language ID, tagging, tokenization, embeddings | Done on macOS 27; iOS named-entity test updated, device rerun pending |
-| [`apple_translation`](packages/apple_translation) | Translation | On-device translation | **Done**, tested on macOS 27; iOS device build verified |
-| [`image_playground`](packages/image_playground) | ImagePlayground | On-device image generation | **Done**, tested on macOS 27 (sheet opens and cancels); iOS build verified; image creation is a manual check |
-| [`media_intelligence`](packages/media_intelligence) | MediaIntelligence | Face grouping, video highlights and key frames | **Done**, tested on macOS 27 (video, face-library lifecycle); iOS build verified; grouping real faces is a manual check |
+| [`apple_vision`](packages/apple_vision) | Vision | Image analysis: text, barcodes, faces, poses, classification, saliency, segmentation | **Done**, tested on macOS 27 and iOS 27 hardware |
+| [`core_ml`](packages/core_ml) | Core ML | Run `.mlmodel` / `.mlpackage` models | **Done**, tested on macOS 27 and iOS 27 hardware |
+| [`apple_speech`](packages/apple_speech) | Speech | On-device speech to text, for files and live audio | **Done**, file/simulated-live pipeline tested on macOS 27 and iOS 27 hardware; iPhone microphone check confirmed by user |
+| [`apple_sound_analysis`](packages/apple_sound_analysis) | SoundAnalysis | Sound classification | **Done**, file/PCM tested on macOS 27 and iOS 27 hardware; iPhone microphone check confirmed by user |
+| [`apple_natural_language`](packages/apple_natural_language) | NaturalLanguage | Language ID, tagging, tokenization, embeddings | **Done**, tested on macOS 27 and iOS 27 hardware, including named entities |
+| [`apple_translation`](packages/apple_translation) | Translation | On-device translation | **Done**, tested on macOS 27 and iOS 27 hardware |
+| [`image_playground`](packages/image_playground) | ImagePlayground | On-device image generation | **Done**, tested on macOS 27 and iOS 27 hardware (sheet opens and cancels); iPhone image creation confirmed by user |
+| [`media_intelligence`](packages/media_intelligence) | MediaIntelligence | Face grouping, video highlights and key frames | Implemented; macOS tests pass, but the iOS 27 highlight fixture returns no highlights; grouping real faces is a manual check |
 
 Every package is implemented and its tests pass against the real frameworks
 on macOS 27. The Status column says what still needs a device run or a

@@ -210,8 +210,8 @@ validation throws `ArgumentError` before contacting native code.
   windows; always flush PCM input and wait for completion.
 * Built-in labels and confidence depend on Apple's model and the actual
   recording.
-* Manual microphone capture and iPhone runtime behavior still need hardware
-  verification. Automated tests check authorization without displaying a
+* The user confirmed manual iPhone microphone classification, stop and restart
+  on 2026-09-23. Automated tests check authorization without displaying a
   permission prompt or recording the microphone.
 
 ## Example and development
@@ -219,7 +219,8 @@ validation throws `ArgumentError` before contacting native code.
 Verified on macOS 27 with Xcode 27: 16 unit tests, 14 framework integration
 tests and one example-app integration test pass, with no skips. Workspace
 analysis and formatting are clean. The iOS device debug build succeeds.
-Live microphone capture and iPhone runtime testing are still pending.
+All 14 framework integration tests also pass on the iOS 27 iPhone. The user
+confirmed the live microphone check on 2026-09-23.
 
 The Material example has light/dark themes and buttons for speech, tone,
 PCM tone, and microphone input, plus a custom-model toggle and Stop button.

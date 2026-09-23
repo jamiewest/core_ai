@@ -1,8 +1,9 @@
 # apple_sound_analysis handoff (2026-09-23)
 
-Status: implementation complete; all automated checks pass. Live microphone
-capture and iPhone runtime verification remain pending. No commits, new
-dependencies, or global configuration changes were made.
+Status: implementation complete; all automated checks pass. Follow-up on
+2026-09-23: all 14 framework tests pass on the iOS 27 iPhone, and the user
+confirmed manual microphone classification, stop and restart. No commits,
+new dependencies, or global configuration changes were made.
 
 ## Implementation
 

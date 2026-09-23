@@ -15,7 +15,9 @@ import 'package:pigeon/pigeon.dart';
     dartOptions: DartOptions(),
     swiftOut:
         'darwin/apple_natural_language/Sources/apple_natural_language/Messages.g.swift',
-    swiftOptions: SwiftOptions(errorClassName: 'AppleNaturalLanguagePigeonError'),
+    swiftOptions: SwiftOptions(
+      errorClassName: 'AppleNaturalLanguagePigeonError',
+    ),
     dartPackageName: 'apple_natural_language',
     copyrightHeader: 'pigeons/copyright.txt',
   ),
@@ -86,10 +88,7 @@ class TagMessage {
 }
 
 class LanguageHypothesisMessage {
-  LanguageHypothesisMessage({
-    required this.language,
-    required this.confidence,
-  });
+  LanguageHypothesisMessage({required this.language, required this.confidence});
 
   String language;
   double confidence;
@@ -247,7 +246,11 @@ abstract class AppleNaturalLanguageHostApi {
 
   // -- Tokenization -----------------------------------------------------------
   @async
-  List<TokenMessage> tokenize(String text, TokenUnitMessage unit, String? language);
+  List<TokenMessage> tokenize(
+    String text,
+    TokenUnitMessage unit,
+    String? language,
+  );
 
   // -- Tagging ----------------------------------------------------------------
   @async
@@ -265,7 +268,10 @@ abstract class AppleNaturalLanguageHostApi {
   List<String> availableTagSchemes(TokenUnitMessage unit, String language);
 
   @async
-  AssetsResultMessage requestTaggerAssets(String language, TagSchemeMessage scheme);
+  AssetsResultMessage requestTaggerAssets(
+    String language,
+    TagSchemeMessage scheme,
+  );
 
   // -- Embeddings -------------------------------------------------------------
   @async

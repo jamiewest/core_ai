@@ -43,9 +43,9 @@ rather than being silently ignored. Check `capabilities()` first.
 
 **Tested:** 17 unit tests, 11 integration tests and the example app test pass
 against the real framework on macOS 27. The integration tests configure real
-controllers and open and cancel a real sheet. The iOS example builds. Not
-tested automatically: creating an image, because that needs a person in
-Apple's interface; and running on an iPhone.
+controllers and open and cancel a real sheet. All 11 integration tests also
+pass on the iOS 27 iPhone. The user confirmed manual image creation and return
+to the Flutter app on 2026-09-23; image creation is not automated.
 
 ## Sessions
 

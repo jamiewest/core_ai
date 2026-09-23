@@ -215,6 +215,8 @@ phrase; final results provide word runs when timing is requested.
 See [HANDOFF_NOTES.md](HANDOFF_NOTES.md) for current verification and remaining
 manual checks, and [example/README.md](example/README.md) for demo/test commands.
 Tests use handwritten API fakes and bundled synthetic audio. Real-framework
-tests never request permissions or download models. Live microphone capture,
-authorized legacy recognition, asset downloading/reservations, and iPhone
-runtime behavior require separate manual verification.
+tests never request permissions or download models. All 14 framework tests
+pass on the iOS 27 iPhone. The user confirmed the manual microphone
+transcription, stop/finalize and restart check on 2026-09-23. Authorized legacy
+recognition and asset downloading/reservations still require separate manual
+verification.

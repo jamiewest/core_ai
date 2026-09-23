@@ -114,6 +114,15 @@ without photos of people.
 
 ## Known platform behavior
 
+On the iOS 27 test iPhone (2026-09-23), the synthetic six-second video
+returns no highlights and twelve half-second intervals scored zero. Native
+logging confirmed this is Apple's `HighlightAnalysisRequest.Result` before
+Pigeon conversion. The integration test's nonempty-highlight assertion
+therefore fails on that phone; it remains an open validation issue. The
+other nine device tests pass, and the optional real-face-photo test is
+skipped. A representative real video is still needed to validate useful
+highlight selection on iOS.
+
 Observed on macOS 27:
 
 * Video analysis can't be cancelled. Cancelling the Swift task doesn't stop

@@ -6,6 +6,60 @@ All ten packages are implemented. `image_playground` and
 `media_intelligence` were finished on 2026-09-23, after Codex's
 continuation in `docs/CODEX_HANDOFF.md`.
 
+### Setup and iPhone follow-up (2026-09-23, afternoon)
+
+The setup review passed workspace static analysis, formatting (after formatting
+the Natural Language Pigeon schema), all 214 package unit tests, and eight
+example widget tests. All ten Swift package manifests parse; this is not a
+SwiftPM build verification. Flutter 3.47.4 / Dart 3.13.3, Xcode 27.0 and
+CocoaPods 1.16.2 are installed. The Apple toolchain passes `flutter doctor`;
+the missing Android SDK is unrelated to these Apple-only plugins.
+
+Physical iPhone runs on iOS 27.0 (24A437), via `flutter drive`:
+
+| Package | Passing | Failing | Skipped |
+|---|---:|---:|---:|
+| apple_natural_language | 15 | 0 | 0 |
+| apple_vision | 16 | 0 | 0 |
+| core_ml | 30 | 0 | 0 |
+| apple_sound_analysis | 14 | 0 | 0 |
+| apple_speech | 14 | 0 | 0 |
+| apple_translation | 23 | 0 | 0 |
+| image_playground | 11 | 0 | 0 |
+| media_intelligence | 9 | 1 | 1 |
+| **Total** | **132** | **1** | **1** |
+
+Counts exclude setup/teardown hooks. Core AI and Foundation Models retain
+their prior successful iPhone results; they were not rerun in this pass.
+Natural Language's named-entity test now passes without skipping. Translation
+has all language packs needed by its suite, and Speech has English assets.
+
+**Open device issue:** Media Intelligence's `finds the second scene as the
+highlight` test fails reproducibly. The native framework returns an empty
+highlight list and twelve half-second intervals with score zero for the
+synthetic clip, before any Pigeon conversion. The failing assertion remains
+intact. A fresh macOS run of the same suite passes all ten tests with one
+optional skip (`/tmp/apple_ai_setup_media_intelligence_macos.log`). Temporary
+native diagnostic logging was removed after verification. Validate highlight
+selection with representative real video before
+calling this feature device-verified. Real-face grouping remains the optional
+skipped test. The cancellation test also emits native store-save errors when
+the test purges the library while Apple's work continues; callback and handle
+cleanup assertions pass, but this is not proof of native cancellation.
+
+The first Natural Language launch hit stale build output: Xcode succeeded,
+but Flutter could not find `build/ios/iphoneos/Runner.app`. `flutter clean`
+and `flutter pub get` resolved it. Each remaining example was cleaned before
+its run. Allow Local Network access on the phone for each example when using
+wireless debugging. Device logs are `/tmp/apple_ai_setup_*_ios*.log`; the
+Natural Language log uses `natural_language` without the `apple_` prefix.
+
+No dependencies, global configuration, or runtime behavior were changed.
+Documentation and one schema's formatting were updated; nothing was committed.
+The initial worktree was clean at `b5ce074`. Free disk space was about 14 GiB
+after device builds, so the earlier low-disk and uncommitted-state notes below
+are historical.
+
 ### Verification
 
 Re-run from clean example builds on macOS 27 on 2026-09-23:
@@ -30,13 +84,23 @@ Re-run from clean example builds on macOS 27 on 2026-09-23:
 
 The iOS example builds succeed for every package.
 
+### Manual checks completed (user confirmation, 2026-09-23)
+
+The user confirmed completion of checklist items 1–3 on the iPhone:
+
+- Speech microphone transcription, stop/finalize and restart.
+- Sound Analysis microphone classification, stop and restart.
+- Image Playground image creation and return to the Flutter app.
+
+These are user-confirmed manual results, separate from the automated counts
+above.
+
 ### What is still unverified
 
-- **iPhone runs.** Only core_ai and foundation_models have run on the
-  iPhone. natural_language's rerun is pending: the phone was locked.
+- **iPhone highlight selection.** Media Intelligence's synthetic highlight
+  test fails on the phone as described above. All other automated framework
+  suites now have successful iPhone runs.
 - **Manual checks** that need a person or real media:
-  - live microphone in speech and sound_analysis;
-  - creating an image in the Image Playground sheet;
   - grouping real faces in media_intelligence. Run its integration test with
     `--dart-define=MEDIA_INTELLIGENCE_FACE_DIR=<photos of people>`.
 - **Headless image generation isn't possible on 27.** `ImageCreator()`

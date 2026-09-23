@@ -63,14 +63,15 @@ They are also copied to the durable backup below.
 ## Manual verification still needed
 
 No automated test records a microphone, requests permissions, downloads model
-assets, or changes locale reservations. Real microphone capture, granting
+assets, or changes locale reservations. The user confirmed manual iPhone
+microphone transcription, stop/finalize and restart on 2026-09-23. Granting
 legacy speech authorization/recognition, download progress/cancellation and
 reservation mutations remain manual checks. The legacy integration test
 checks the authorization-appropriate path without prompting; this checkpoint
 makes no claim of a separately verified authorized legacy session.
 
-No iPhone runtime test was attempted. An unsigned iOS build is not a runtime
-pass. The example has both usage-description keys and macOS audio-input and
+The subsequent iOS 27 iPhone run passed all 14 framework tests. The example
+has both usage-description keys and macOS audio-input and
 network-client entitlements. Model downloads/legacy network use need network
 access; the example requests on-device legacy recognition.
 

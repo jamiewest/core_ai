@@ -33,12 +33,9 @@ On unsupported platforms `NaturalLanguage.isSupported()` returns false and
 calls throw `NaturalLanguageErrorCode.unsupported`.
 
 **Tested:** 14 unit tests, the integration suite (15 tests), and the example
-app test pass on macOS 27. The iOS example builds. The original iOS 27 device
-run passed 14 of 15 integration tests; named-entity tagging returned only
-`Other`. The test now requests assets and explicitly skips that iOS case.
-Verification of the updated test on the iPhone is pending: the latest
-wireless attempt built successfully but could not connect to the Dart
-debugger, and the device reported that a passcode was required.
+app test pass on macOS 27. All 15 integration tests also pass on the iOS 27
+iPhone (2026-09-23), including named-entity tagging after requesting English
+assets; no device tests were skipped.
 
 ## Text offsets
 
